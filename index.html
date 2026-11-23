@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestão de Pedidos</title>
+    <link rel="stylesheet" href="css/style.css">    
+</head>
+<body>
+    <header>
+        <h1>Meu Pedido</h1>
+        <p>Controle de pedidos e pagamentos</p>
+    </header>
+    <main>
+        <section id="areaLogin" class="cadastro">
+
+            <h2>Acessar MeuPedido</h2>
+
+            <form id="formLogin">
+
+                <label for="emailLogin">E-mail</label>
+                <input type="email" id="emailLogin" required>
+
+                <label for="senhaLogin">Senha</label>
+                <input type="password" id="senhaLogin" required>
+
+                <button type="submit" id="btnEntrar">
+                    Entrar
+                </button>
+
+                <button type="button" id="btnEsqueciSenha">
+                    Esqueci minha senha
+                </button>
+
+            </form>
+
+            <p>Ainda não tem conta?</p>
+
+            <button type="button" id="btnCriarConta">
+                Criar minha conta
+            </button>
+
+            <form id="formCadastro" style="display: none;">
+
+                <h2>Criar conta</h2>
+
+                <label for="emailCadastro">E-mail</label>
+                <input type="email" id="emailCadastro" required>
+
+                <label for="senhaCadastro">Senha</label>
+                <input type="password" id="senhaCadastro" minlength="6" required>
+
+                <button type="submit" id="btnCadastrar">
+                    Cadastrar
+                </button>
+
+                <button type="button" id="btnVoltarLogin">
+                    Voltar para login
+                </button>
+
+            </form>
+
+        </section>
+
+
+        <section id="areaNovaSenha" class="cadastro" style="display: none;">
+
+            <h2>Definir nova senha</h2>
+
+            <form id="formNovaSenha">
+
+                <label for="novaSenha">Nova senha</label>
+                <input
+                    type="password"
+                    id="novaSenha"
+                    minlength="6"
+                    required
+                >
+
+                <label for="confirmarSenha">Confirmar nova senha</label>
+                <input
+                    type="password"
+                    id="confirmarSenha"
+                    minlength="6"
+                    required
+                >
+
+                <button type="submit">Salvar nova senha</button>
+
+            </form>
+
+        </section>
+
+
+            <div id="painelPrincipal" style="display: none;">
+
+                <div class="area-usuario">
+
+                    <p id="usuarioLogado"></p>
+
+                    <button type="button" id="btnSair">
+                        Sair da conta
+                    </button>
+
+                </div>
+        
+        <section class="resumo">
+            <div class="card">
+                <h3>Total de pedidos</h3>
+                <p id="totalPedidos">0</p>
+            </div>
+
+            <div class="card">
+                <h3>Valor total</h3>
+                <p id="valorTotal">R$ 0,00</p>
+            </div>
+
+            <div class="card">
+                <h3>Valores pendentes</h3>
+                <p id="valorPendente">R$ 0,00</p>
+            </div>
+
+            <div class="card">
+                <h3>Total recebido</h3>
+                <p id="valorRecebido">R$ 0,00</p>
+            </div>
+
+            <div class="card">
+                <h3>Pedidos pagos</h3>
+                <p id="pedidosPagos">0</p>
+            </div>
+
+            <div class="card">
+                <h3>Pedidos pendentes</h3>
+                <p id="pedidosPendentes">0</p>
+            </div>
+        </section>
+
+
+        <section class="cadastro">
+            <h2>Novo pedido</h2>
+
+            <form id="formPedido">
+                <label>Nome do cliente</label>
+                <input type="text" id="cliente" required>
+
+                <label>Descrição do produto</label>
+                <input type="text" id="produto" required>
+
+                <label>Forma de cálculo</label>
+                    <select id="tipoCalculo">
+                        <option value="unitario">Valor unitário</option>
+                        <option value="metro">Metro quadrado (m²)</option>
+                    </select>
+                    <div id="camposMetro" style="display: none;">
+                        <label>Largura (metros)</label>
+                        <input type="number" id="largura" min="0.01" step="0.01">
+
+                        <label>Altura (metros)</label>
+                        <input type="number" id="altura" min="0.01" step="0.01">
+
+                        <label>Preço por m² (R$) (metros)</label>
+                        <input type="number" id="precoMetro" min="0.01" step="0.01">
+                    </div>
+
+                <label>Quantidade</label>
+                <input type="number" id="quantidade" min="1" required>
+
+                <label id="labelPreco" for="preco">Valor unitário (R$)</label>
+                <input type="number" id="preco" min="0.01" step="0.01" required>
+
+                <label>Pagamento</label>
+                <select id="pagamento">
+                    <option value="Pendente">Pendente</option>
+                    <option value="Pago">Pago</option>
+                </select>  
+                
+                <button type="submit" id="btnSalvarPedido">
+                    Cadastrar pedido
+                </button>
+             </form>
+        </section>
+
+        <section class="pedidos">
+            <h2>Pedidos cadastrados</h2>
+
+            <div class="filtros-pedidos">
+                <button onclick="filtrarPedidos('todos')">Todos</button>
+                <button onclick="filtrarPedidos('Pendente')">Pendentes</button>
+                <button onclick="filtrarPedidos('Pago')">Pagos</button>
+            </div>
+
+            <div class="filtro-periodo">
+
+                <label for="filtroPeriodo">Período financeiro:</label>
+
+                <select id="filtroPeriodo">
+                    <option value="todos">Todos os períodos</option>
+                    <option value="hoje">Hoje</option>
+                    <option value="7dias">Últimos 7 dias</option>
+                    <option value="30dias">Últimos 30 dias</option>
+                    <option value="personalizado">Personalizado</option>
+                </select>
+
+                <div id="datasPersonalizadas" style="display: none;">
+
+                    <label for="dataInicial">Data inicial:</label>
+                    <input type="date" id="dataInicial">
+
+                    <label for="dataFinal">Data final:</label>
+                    <input type="date" id="dataFinal">
+
+                </div>
+
+            </div>
+
+            <div class="exportar-relatorio">
+                <button type="button" onclick="exportarRelatorio()">
+                    Exportar relatório financeiro
+                </button>
+            </div>
+
+             <div class="backup-container">
+
+                    <h3>Backup dos pedidos</h3>
+
+                    <button type="button" id="btnBackup" onclick="fazerBackup(this)">
+                        Baixar backup
+                    </button>
+
+                    <label for="arquivoBackup" id="textoRestaurarBackup">
+                        Restaurar backup
+                    </label>
+
+                    <input
+                        type="file"
+                        id="arquivoBackup"
+                        accept=".json,application/json"
+                    >
+
+                </div>
+
+
+
+                <input type="text" id="pesquisaPedidos" placeholder="Pesquisar por cliente ou produto">
+
+                <div id="listaPedidos"></div>
+            </section>
+        </div>
+    </main>
+
+        <div id="notificacao"></div>
+        
+            <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+            <script src="js/supabase.js"></script>
+
+            <script src="js/script.js"></script>
+
+            <script src="js/auth.js"></script>
+
+</body>
+</html>
