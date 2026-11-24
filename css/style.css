@@ -465,3 +465,44 @@ button:hover{
         transform: translateX(0);
     }
 } 
+
+
+/* Tela de assinatura vencida */
+#areaAssinaturaVencida {
+    max-width: 450px;
+    margin: 60px auto;
+    padding: 30px;
+    text-align: center;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+#areaAssinaturaVencida h2 {
+    margin-bottom: 15px;
+}
+
+#areaAssinaturaVencida h3 {
+    font-size: 28px;
+    margin: 25px 0;
+}
+
+#areaAssinaturaVencida button {
+    display: block;
+    width: 100%;
+    margin-top: 12px;
+    padding: 12px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+#btnContratar {
+    background: #2563eb;
+    color: white;
+}
+
+#btnSairAssinatura {
+    background: #e5e7eb;
+    color: #333;
+}
