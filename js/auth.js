@@ -105,17 +105,12 @@ formLogin.addEventListener("submit", async function(event){
 
     if(!acessoPermitido){
 
-        await supabaseClient.auth.signOut();
+    mostrarTelaAssinaturaVencida();
 
-        mostrarNotificacao(
-            "Não foi possível liberar o acesso. Verifique sua assinatura.",
-            "erro"
-        );
+    btnEntrar.disabled = false;
+    btnEntrar.textContent = "Entrar";
 
-        btnEntrar.disabled = false;
-        btnEntrar.textContent = "Entrar";
-
-        return;
+    return;
     }
 
     mostrarNotificacao(
@@ -205,21 +200,9 @@ if(data.session){
 
     if(!acessoPermitido){
 
-        await supabaseClient.auth.signOut();
+    mostrarTelaAssinaturaVencida();
 
-        document.getElementById("areaLogin").style.display = "block";
-        document.getElementById("painelPrincipal").style.display = "none";
-        document.getElementById("usuarioLogado").textContent = "";
-
-        pedidos = [];
-        aplicarFiltros();
-
-        mostrarNotificacao(
-            "Sua assinatura não permite acesso ao sistema.",
-            "erro"
-        );
-
-        return;
+    return;
     }
 
     document.getElementById("areaLogin").style.display = "none";
@@ -246,6 +229,23 @@ if(data.session){
 
     }
 
+}
+
+
+// Mostrar tela quando a assinatura não permite acesso
+function mostrarTelaAssinaturaVencida(){
+
+    document.getElementById("areaLogin").style.display = "none";
+
+    document.getElementById("painelPrincipal").style.display = "none";
+
+    document.getElementById("areaAssinaturaVencida").style.display = "block";
+
+    document.getElementById("usuarioLogado").textContent = "";
+
+    pedidos = [];
+
+    aplicarFiltros();
 }
 
 
@@ -435,5 +435,41 @@ formNovaSenha.addEventListener("submit", async function(event){
     document.getElementById("areaLogin").style.display = "block";
 
     await supabaseClient.auth.signOut();
+
+});
+
+
+// Sair da conta pela tela de assinatura vencida
+document.getElementById("btnSairAssinatura").addEventListener("click", async function(){
+
+    const { error } = await supabaseClient.auth.signOut();
+
+    if(error){
+        mostrarNotificacao(
+            "Erro ao sair da conta: " + error.message,
+            "erro"
+        );
+        return;
+    }
+
+    document.getElementById("areaAssinaturaVencida").style.display = "none";
+    document.getElementById("areaLogin").style.display = "block";
+    document.getElementById("painelPrincipal").style.display = "none";
+    document.getElementById("usuarioLogado").textContent = "";
+
+    pedidos = [];
+
+    aplicarFiltros();
+
+});
+
+
+// Botão de contratação
+document.getElementById("btnContratar").addEventListener("click", function(){
+
+    mostrarNotificacao(
+        "A contratação estará disponível em breve!",
+        "sucesso"
+    );
 
 });
