@@ -196,11 +196,38 @@ async function verificarSessao(){
     return;
     }
 
-    if(data.session){
+    
+if(data.session){
+
+    const acessoPermitido = await verificarAssinatura(
+        data.session.user.id
+    );
+
+    if(!acessoPermitido){
+
+        await supabaseClient.auth.signOut();
+
+        document.getElementById("areaLogin").style.display = "block";
+        document.getElementById("painelPrincipal").style.display = "none";
+        document.getElementById("usuarioLogado").textContent = "";
+
+        pedidos = [];
+        aplicarFiltros();
+
+        mostrarNotificacao(
+            "Sua assinatura não permite acesso ao sistema.",
+            "erro"
+        );
+
+        return;
+    }
 
     document.getElementById("areaLogin").style.display = "none";
 
     document.getElementById("painelPrincipal").style.display = "block";
+
+
+
 
     document.getElementById("usuarioLogado").textContent =
         "Usuário: " + data.session.user.email;
