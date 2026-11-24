@@ -99,12 +99,33 @@ formLogin.addEventListener("submit", async function(event){
     return;
     }
 
+        
+    // Verificar se o usuário pode acessar o sistema
+    const acessoPermitido = await verificarAssinatura(data.user.id);
+
+    if(!acessoPermitido){
+
+        await supabaseClient.auth.signOut();
+
         mostrarNotificacao(
-            "Login realizado com sucesso!",
-            "sucesso"
+            "Não foi possível liberar o acesso. Verifique sua assinatura.",
+            "erro"
         );
+
+        btnEntrar.disabled = false;
+        btnEntrar.textContent = "Entrar";
+
+        return;
+    }
+
+    mostrarNotificacao(
+        "Login realizado com sucesso!",
+        "sucesso"
+    );
+
     // Esconder a área de login
     document.getElementById("areaLogin").style.display = "none";
+
 
     // Mostrar o painel principal
     document.getElementById("painelPrincipal").style.display = "block";
@@ -199,6 +220,58 @@ async function verificarSessao(){
     }
 
 }
+
+
+// Verificar se o usuário pode acessar o MeuPedido
+async function verificarAssinatura(userId){
+
+    const { data, error } = await supabaseClient
+        .from("assinaturas")
+        .select("status, trial_ends_at, subscription_ends_at")
+        .eq("user_id", userId)
+        .maybeSingle();
+
+    if(error){
+        mostrarNotificacao(
+            "Erro ao verificar assinatura: " + error.message,
+            "erro"
+        );
+        return false;
+    }
+
+    // Contas antigas sem assinatura continuam com acesso
+    if(!data){
+        return true;
+    }
+
+    // Período gratuito
+    if(data.status === "trialing"){
+
+        if(
+            data.trial_ends_at &&
+            new Date(data.trial_ends_at).getTime() > Date.now()
+        ){
+            return true;
+        }
+
+        return false;
+    }
+
+    // Assinatura paga
+    if(data.status === "active"){
+
+        if(!data.subscription_ends_at){
+            return true;
+        }
+
+        return new Date(data.subscription_ends_at).getTime()
+            > Date.now();
+    }
+
+    // Cadastro pendente, expirado ou cancelado
+    return false;
+}
+
 
 // Executar verificação
 verificarSessao();
