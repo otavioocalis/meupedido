@@ -271,6 +271,10 @@ async function verificarAssinatura(userId){
         return true;
     }
 
+    console.log("ASSINATURA ENCONTRADA:", data);
+    console.log("DATA DE VENCIMENTO:", new Date(data.trial_ends_at));
+    console.log("DATA ATUAL:", new Date());
+   
     // Período gratuito
     if(data.status === "trialing"){
 
